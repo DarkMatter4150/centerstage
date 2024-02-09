@@ -1,14 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.systems;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Hardware {
-
     private OpMode opMode = null;
 
-    //wheels
+    //drivebase
     private DcMotor frontLeft = null;
     private DcMotor backLeft = null;
     private DcMotor frontRight = null;
@@ -23,7 +22,10 @@ public class Hardware {
     private Servo intakeServoLeft = null;
     private Servo intakeServoRight = null;
 
-    //TODO: bucket
+    //bucket
+    private Servo armLeft = null;
+    private Servo armRight = null;
+    private Servo bucketRot = null;
 
     //plane
     private Servo plane = null;
@@ -31,7 +33,7 @@ public class Hardware {
     //pullup
     private DcMotor pullup = null;
 
-
+    public Hardware() {}
     public Hardware(OpMode opMode) {
         this.opMode = opMode;
     }
@@ -44,12 +46,18 @@ public class Hardware {
 
         liftLeft = opMode.hardwareMap.get(DcMotor.class, "liftLeft");
         liftRight = opMode.hardwareMap.get(DcMotor.class, "liftRight");
+        liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         intake = opMode.hardwareMap.get(DcMotor.class, "intake");
         intakeServoLeft = opMode.hardwareMap.get(Servo.class, "intakeServoLeft");
         intakeServoRight = opMode.hardwareMap.get(Servo.class, "intakeServoRight");
 
-        //TODO: bucket
+        armLeft = opMode.hardwareMap.get(Servo.class, "armLeft");
+        armRight = opMode.hardwareMap.get(Servo.class, "armRight");
+        bucketRot = opMode.hardwareMap.get(Servo.class, "bucketRot");
 
         plane = opMode.hardwareMap.get(Servo.class, "plane");
 
@@ -77,6 +85,10 @@ public class Hardware {
         liftRight.setPower(-power);
     }
 
+    public int getLiftPosition() {
+        return liftLeft.getCurrentPosition();
+    }
+
     public void setIntakePower(double power) {
         intake.setPower(power);
     }
@@ -86,7 +98,14 @@ public class Hardware {
         intakeServoRight.setPosition(position);
     }
 
-    //TODO: bucket
+    public void setArmPosition(double position) {
+        armLeft.setPosition(position);
+        armRight.setPosition(1 - position);
+    }
+
+    public void setBucketRotPosition(double position) {
+        bucketRot.setPosition(position);
+    }
 
     public void setPlanePosition(double position) {
         plane.setPosition(position);

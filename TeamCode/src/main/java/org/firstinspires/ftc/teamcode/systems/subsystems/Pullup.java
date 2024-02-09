@@ -1,10 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.systems.subsystems;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.systems.Hardware;
+import org.firstinspires.ftc.teamcode.systems.PID;
 
 public class Pullup {
     Hardware hardware;
     PID pid;
+
+    final int DOWN = 0;
+    final int UP = 100;
 
     public Pullup() {}
     public Pullup(Hardware hardware) {
@@ -19,5 +25,13 @@ public class Pullup {
 
         double power = pid.Calculate(targetPos, currentPos, runtime);
         hardware.setPullupPower(power);
+    }
+
+    public void Down() {
+        this.Move(DOWN);
+    }
+
+    public void Up() {
+        this.Move(UP);
     }
 }
