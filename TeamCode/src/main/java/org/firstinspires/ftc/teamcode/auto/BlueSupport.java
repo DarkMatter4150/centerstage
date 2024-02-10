@@ -54,6 +54,8 @@ public class BlueSupport extends OpMode {
                         //.splineToLinearHeading(new Pose2d(-30, 10, Math.toRadians(90)), Math.toRadians(0))
                         .splineToLinearHeading(new Pose2d(-42, 10, Math.toRadians(90)), Math.toRadians(0))
                         .strafeToLinearHeading(new Vector2d(42, 24), Math.toRadians(180))
+                        .strafeTo(new Vector2d(60, 24))
+                        .strafeTo(new Vector2d(48, 18))
                         .build());
 
 
