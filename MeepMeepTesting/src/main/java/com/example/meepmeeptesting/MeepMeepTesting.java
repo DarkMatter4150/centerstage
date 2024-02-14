@@ -20,7 +20,7 @@ public class MeepMeepTesting {
 
     static Vector2d[] tapesBlueLeft = { new Vector2d(9, 30), new Vector2d(15, 24), new Vector2d(31, 30)};
     //Location of tape spikes by stacks (Blue)
-    static Vector2d[] tapesBlueRight = { new Vector2d(-33, 33), new Vector2d(-40, 24), new Vector2d(-55, 30)};
+    static Vector2d[] tapesBlueRight = { new Vector2d(-24, 33), new Vector2d(-36, 24), new Vector2d(-48, 33)};
     //Location of tape spikes closest to backboard (Blue)
     static Vector2d[] boardsBlue = { new Vector2d(48, 30), new Vector2d(48, 36), new Vector2d(48, 42)};
     //Location of Backboard for Blue Alliance
@@ -57,8 +57,13 @@ public class MeepMeepTesting {
 //Support Role (US)
         myBot.runAction(myBot.getDrive().actionBuilder(startPoseSupport)
                                 .strafeToConstantHeading(new Vector2d(-36, 36))
-                                .strafeToConstantHeading(tapesBlueRight[0])
+                                .strafeToConstantHeading(tapesBlueRight[loc])
                                 .strafeToConstantHeading(new Vector2d(-36, 36))
+                                .strafeToConstantHeading(new Vector2d(-33, 5))
+                                .strafeToLinearHeading(new Vector2d(48, 18),Math.PI)
+                                .strafeTo(boardsBlue[loc])
+           
+
 
 
 
@@ -89,6 +94,7 @@ public class MeepMeepTesting {
                         .strafeToConstantHeading(boardsBlue[2])
                         .strafeTo(new Vector2d(48, 36))
                         .strafeTo(stacksBlue[0])
+                        .strafeTo(boardsBlue[1])
 
 
                         .build());
