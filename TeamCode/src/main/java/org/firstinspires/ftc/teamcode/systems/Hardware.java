@@ -89,18 +89,26 @@ public class Hardware {
         return liftLeft.getCurrentPosition();
     }
 
+
+
     public void setIntakePower(double power) {
         intake.setPower(power);
     }
 
-    public void setIntakeServoPosition(double position) {
+    public void setIntakeServoPositionLeft(double position) {
         intakeServoLeft.setPosition(position);
+    }
+
+    public void setIntakeServoPositionRight(double position) {
         intakeServoRight.setPosition(position);
     }
 
-    public void setArmPosition(double position) {
+    public void setArmServoPositionLeft(double position) {
         armLeft.setPosition(position);
-        armRight.setPosition(1 - position);
+    }
+
+    public void setArmServoPositionRight(double position) {
+        armRight.setPosition(position);
     }
 
     public void setBucketRotPosition(double position) {

@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.systems.subsystems;
 
+import static android.os.SystemClock.sleep;
+
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.systems.Hardware;
 import org.firstinspires.ftc.teamcode.systems.PID;
 
@@ -9,29 +13,37 @@ public class Pullup {
     Hardware hardware;
     PID pid;
 
-    final int DOWN = 0;
-    final int UP = 100;
+    public static double Kp = 0.01;
+    public static double Ki = 0.0;
+    public static double Kd = 0.0;
+
+    final int[] POSITIONS = { 0, 1200, 2500, 1200};
 
     public Pullup() {}
     public Pullup(Hardware hardware) {
         this.hardware = hardware;
-        pid = new PID(0.2, 0.0, 0.0);
+        pid = new PID(Kp, Ki, Kd);
     }
 
-    public void Move(int targetPos) {
+    public void Move(int targetPosIndex) {
+        int targetPos = POSITIONS[targetPosIndex];
+
         int currentPos = hardware.getPullupPosition();
 
         ElapsedTime runtime = new ElapsedTime();
 
         double power = pid.Calculate(targetPos, currentPos, runtime);
         hardware.setPullupPower(power);
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
+        dashboardTelemetry.addData("currentPos: ", currentPos);
+        dashboardTelemetry.addData("targetPos: ", targetPos);
+        dashboardTelemetry.update();
     }
 
-    public void Down() {
-        this.Move(DOWN);
-    }
-
-    public void Up() {
-        this.Move(UP);
+    public int GetNumPositions() {
+        return POSITIONS.length;
     }
 }

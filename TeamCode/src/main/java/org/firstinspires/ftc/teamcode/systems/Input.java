@@ -7,17 +7,20 @@ public class Input {
     private OpMode opMode = null;
     private Gamepad currentGamepad1, currentGamepad2, previousGamepad1, previousGamepad2;
 
+    public double multiplier = 1.0;
+
     public int liftLevel = 0;
+
+    public int intakeLevel = 0;
 
     public double intakePower = 0.0;
     public boolean intakeServo = false;
 
     public boolean bucketArm = false;
-    public boolean bucketRot = false;
 
     public boolean plane = false;
 
-    public boolean pullup = false;
+    public int pullupLevel = 0;
 
     public Input() {}
 
@@ -32,7 +35,7 @@ public class Input {
         previousGamepad2 = new Gamepad();
     }
 
-    public void loop() {
+    public void loop(int liftNumPos, int intakeNumPos, int pullupNumPos) {
         try {
             previousGamepad1.copy(currentGamepad1);
             previousGamepad2.copy(currentGamepad2);
@@ -46,11 +49,29 @@ public class Input {
 
         if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up) {
             liftLevel++;
-            liftLevel %= 4;
+            liftLevel %= liftNumPos;
         }
         else if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down) {
             liftLevel--;
-            liftLevel %= 4;
+            liftLevel = (liftLevel + liftNumPos) % liftNumPos;
+        }
+
+        if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right) {
+            intakeLevel++;
+            intakeLevel %= intakeNumPos;
+        }
+        else if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left) {
+            intakeLevel--;
+            intakeLevel = (intakeLevel + intakeNumPos) % intakeNumPos;
+        }
+
+        if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
+            multiplier += 0.25;
+            if(multiplier > 1.0) multiplier = 1.0;
+        }
+        else if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
+            multiplier -= 0.25;
+            if(multiplier < 0.25) multiplier = 0.25;
         }
 
         intakePower = currentGamepad2.right_trigger - currentGamepad2.left_trigger;
@@ -63,17 +84,19 @@ public class Input {
             bucketArm = !bucketArm;
         }
 
-        if (currentGamepad2.b && !previousGamepad2.b) {
-            bucketRot = !bucketRot;
-        }
-
-        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
             plane = !plane;
         }
 
-        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-            pullup = !pullup;
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            pullupLevel++;
+            if(pullupLevel >= pullupNumPos) pullupLevel = pullupNumPos - 1;
         }
+
+        opMode.telemetry.addData("Speed", multiplier * 100);
+        opMode.telemetry.addData("Intake Level", intakeLevel);
+        opMode.telemetry.addData("Lift Level", liftLevel);
+        opMode.telemetry.update();
     }
 
 }

@@ -43,8 +43,12 @@ public class Robot {
         pullup = new Pullup(hardware);
     }
 
+    public void RefreshInput() {
+        input.loop(lift.GetNumPositions(), intake.GetNumPositions(), pullup.GetNumPositions());
+    }
+
     public void Drive() {
-        drivebase.Drive();
+        drivebase.Drive(input.multiplier);
     }
 
     public void Lift() {
@@ -52,12 +56,10 @@ public class Robot {
     }
 
     public void Intake() {
-        if(input.intakeServo) {
-            intake.Up();
-        }
-        else {
-            intake.Down();
-        }
+        hardware.setIntakePower(input.intakePower);
+
+
+        intake.Down(input.intakeLevel);
     }
 
     public void Bucket() {
@@ -66,13 +68,6 @@ public class Robot {
         }
         else {
             bucket.ArmDown();
-        }
-
-        if(input.bucketRot) {
-            bucket.RotateUp();
-        }
-        else {
-            bucket.RotateDown();
         }
     }
 
@@ -85,12 +80,5 @@ public class Robot {
         }
     }
 
-    public void Pullup() {
-        if(input.pullup) {
-            pullup.Up();
-        }
-        else {
-            pullup.Down();
-        }
-    }
+    public void Pullup() { pullup.Move(input.pullupLevel); }
 }
