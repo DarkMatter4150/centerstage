@@ -18,6 +18,8 @@ public class Input {
 
     public boolean bucketArm = false;
 
+    public boolean bucketRot = false;
+
     public boolean plane = false;
 
     public int pullupLevel = 0;
@@ -82,6 +84,15 @@ public class Input {
 
         if (currentGamepad2.a && !previousGamepad2.a) {
             bucketArm = !bucketArm;
+        }
+
+        if (currentGamepad2.b && !previousGamepad2.b) {
+            if(bucketArm) {
+                bucketRot = !bucketRot;
+            }
+            if(!bucketArm) {
+                bucketRot = false;
+            }
         }
 
         if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {

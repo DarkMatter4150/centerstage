@@ -58,7 +58,6 @@ public class Robot {
     public void Intake() {
         hardware.setIntakePower(input.intakePower);
 
-
         intake.Down(input.intakeLevel);
     }
 
@@ -68,6 +67,13 @@ public class Robot {
         }
         else {
             bucket.ArmDown();
+        }
+
+        if(input.bucketRot) {
+            bucket.RotateDown();
+        }
+        else {
+            bucket.RotateUp();
         }
     }
 

@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.vision.VisionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(group = "Autonomous", preselectTeleOp = "Tele")
@@ -21,7 +23,7 @@ public class BlueSupport extends OpMode {
 
     MecanumDrive drive;
 
-    OpenCvCamera camera;
+    OpenCvWebcam camera;
 
     VisionPipeline pipeline;
 
@@ -34,20 +36,19 @@ public class BlueSupport extends OpMode {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "NAME_OF_CAMERA_IN_CONFIG_FILE");
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+
+        //camera.getFocusControl().setMode(OpenCvCamera.FocusControl.Mode.AUTO);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1280, 720);
+                camera.startStreaming(pipeline.WIDTH, pipeline.HEIGHT, OpenCvCameraRotation.UPRIGHT);
                 camera.setPipeline(pipeline);
-
-                telemetry.addData("Camera", "Initialized");
-                telemetry.update();
             }
             @Override
             public void onError(int errorCode)
@@ -57,19 +58,10 @@ public class BlueSupport extends OpMode {
                  */
             }
         });
-
-        telemetry.addData("Camera", "Position: " + loc);
-        telemetry.update();
     }
 
     @Override
     public void start() {
-        camera.closeCameraDeviceAsync(() -> {
-            loc = pipeline.getPos();
-            telemetry.addData("Camera", "Saved Position: " + loc);
-            telemetry.update();
-        });
-
         Actions.runBlocking(
                 drive.actionBuilder(startPoseSupport)
                     //TODO: Add actions here
@@ -77,5 +69,9 @@ public class BlueSupport extends OpMode {
     }
 
     @Override
-    public void loop() {}
+    public void loop() {
+        loc = pipeline.getPos();
+        telemetry.addData("Camera", "Position: " + loc);
+        telemetry.update();
+    }
 }

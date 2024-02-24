@@ -16,8 +16,8 @@ import java.util.Objects;
 
 public class VisionPipeline extends OpenCvPipeline {
 
-    private final int WIDTH = 1280;
-    private final int HEIGHT = 720;
+    public final int WIDTH = 640;
+    public final int HEIGHT = 480;
 
     public Scalar lowBlue = new Scalar(90, 100, 100);
     public Scalar highBlue = new Scalar(145, 255, 255);
@@ -27,7 +27,7 @@ public class VisionPipeline extends OpenCvPipeline {
 
     private volatile vPos pos = vPos.RIGHT;
 
-    //Mat blur = new Mat();
+    Mat blur = new Mat();
 
     Mat hsv = new Mat();
     Mat mask = new Mat();
@@ -49,9 +49,9 @@ public class VisionPipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
 
-        //Imgproc.GaussianBlur(input, blur, new Size(3, 3), 0, 0);
+        Imgproc.GaussianBlur(input, blur, new Size(3, 3), 0, 0);
 
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(blur, hsv, Imgproc.COLOR_RGB2HSV);
         if(isBlue) {
             Core.inRange(hsv, lowBlue, highBlue, mask);
         }

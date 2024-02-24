@@ -30,17 +30,10 @@ public class Pullup {
 
         int currentPos = hardware.getPullupPosition();
 
-        ElapsedTime runtime = new ElapsedTime();
-
-        double power = pid.Calculate(targetPos, currentPos, runtime);
+        double power = pid.Calculate(targetPos, currentPos);
         hardware.setPullupPower(power);
 
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry dashboardTelemetry = dashboard.getTelemetry();
-
-        dashboardTelemetry.addData("currentPos: ", currentPos);
-        dashboardTelemetry.addData("targetPos: ", targetPos);
-        dashboardTelemetry.update();
+        pid.DashTelemetry(currentPos, targetPos);
     }
 
     public int GetNumPositions() {
