@@ -24,6 +24,7 @@ public class Bucket {
     public void ArmDown() {
         hardware.setArmServoPositionLeft(1 - DOWN);
         hardware.setArmServoPositionRight(DOWN);
+        RotateDown();
     }
 
     public void ArmUp() {

@@ -70,10 +70,10 @@ public class Robot {
         }
 
         if(input.bucketRot) {
-            bucket.RotateDown();
+            bucket.RotateUp();
         }
         else {
-            bucket.RotateUp();
+            bucket.RotateDown();
         }
     }
 
