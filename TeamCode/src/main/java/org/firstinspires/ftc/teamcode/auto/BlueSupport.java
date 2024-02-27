@@ -38,15 +38,13 @@ public class BlueSupport extends OpMode {
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap, startPoseSupport);
-        pipeline = new VisionPipeline("BLUE");
+        pipeline = new VisionPipeline("RED");
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-
-        //camera.getFocusControl().setMode(OpenCvCamera.FocusControl.Mode.AUTO);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -72,23 +70,23 @@ public class BlueSupport extends OpMode {
                 drive.actionBuilder(startPoseSupport)
                     //TODO: Add actions here
 
-                    .lineToY(36)
-                    .strafeToConstantHeading(tapes[loc.ordinal()])
-                    .strafeToConstantHeading(new Vector2d(-36, 36))
-                    .strafeToConstantHeading(new Vector2d(-35, 4))
-                    .strafeToLinearHeading(new Vector2d(48, 13),Math.PI)
-                    .waitSeconds(2.6)
-                    .strafeTo(boards[loc.ordinal()])
-                    .strafeTo(new Vector2d(48, 12))
-                    .strafeTo(new Vector2d(72, 10))
+//                    .lineToY(36)
+//                    .strafeToConstantHeading(tapes[loc.ordinal()])
+//                    .strafeToConstantHeading(new Vector2d(-36, 36))
+//                    .strafeToConstantHeading(new Vector2d(-35, 4))
+//                    .strafeToLinearHeading(new Vector2d(48, 13),Math.PI)
+//                    .waitSeconds(2.6)
+//                    .strafeTo(boards[loc.ordinal()])
+//                    .strafeTo(new Vector2d(48, 12))
+//                    .strafeTo(new Vector2d(72, 10))
                     .build());
 
     }
 
     @Override
     public void loop() {
-//        loc = pipeline.getPos();
-//        telemetry.addData("Camera", "Position: " + loc);
-//        telemetry.update();
+        loc = pipeline.getPos();
+        telemetry.addData("Camera", "Position: " + loc);
+        telemetry.update();
     }
 }

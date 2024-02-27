@@ -48,11 +48,16 @@ public class Robot {
     }
 
     public void Drive() {
-        drivebase.Drive(input.multiplier);
+        drivebase.Drive(input.multiplierToggle);
     }
 
     public void Lift() {
-        lift.Move(input.liftLevel);
+        if (input.manualLift) {
+            lift.Move(-input.currentGamepad2.left_stick_y);
+        }
+        else {
+            lift.Move(input.liftLevel);
+        }
     }
 
     public void Intake() {

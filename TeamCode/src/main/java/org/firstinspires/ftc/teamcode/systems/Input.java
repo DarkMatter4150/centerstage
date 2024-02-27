@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class Input {
     private OpMode opMode = null;
-    private Gamepad currentGamepad1, currentGamepad2, previousGamepad1, previousGamepad2;
+    public Gamepad currentGamepad1, currentGamepad2, previousGamepad1, previousGamepad2;
 
-    public double multiplier = 1.0;
+    public boolean multiplierToggle = false;
+
+    public boolean manualLift = false;
 
     public int liftLevel = 0;
 
@@ -58,6 +60,10 @@ public class Input {
             liftLevel = (liftLevel + liftNumPos) % liftNumPos;
         }
 
+        if(currentGamepad2.y && !previousGamepad2.y) {
+            manualLift = !manualLift;
+        }
+
         if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right) {
             intakeLevel++;
             intakeLevel %= intakeNumPos;
@@ -67,13 +73,8 @@ public class Input {
             intakeLevel = (intakeLevel + intakeNumPos) % intakeNumPos;
         }
 
-        if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
-            multiplier += 0.25;
-            if(multiplier > 1.0) multiplier = 1.0;
-        }
-        else if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
-            multiplier -= 0.25;
-            if(multiplier < 0.25) multiplier = 0.25;
+        if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
+            multiplierToggle = !multiplierToggle;
         }
 
         intakePower = currentGamepad2.right_trigger - currentGamepad2.left_trigger;
@@ -90,9 +91,10 @@ public class Input {
             if(bucketArm) {
                 bucketRot = !bucketRot;
             }
-            if(!bucketArm) {
-                bucketRot = false;
-            }
+        }
+
+        if(!bucketArm) {
+            bucketRot = false;
         }
 
         if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
@@ -104,7 +106,7 @@ public class Input {
             if(pullupLevel >= pullupNumPos) pullupLevel = pullupNumPos - 1;
         }
 
-        opMode.telemetry.addData("Speed", multiplier * 100);
+        opMode.telemetry.addData("Speed", multiplierToggle ? "30%" : "100%");
         opMode.telemetry.addData("Intake Level", intakeLevel);
         opMode.telemetry.addData("Lift Level", liftLevel);
         opMode.telemetry.update();

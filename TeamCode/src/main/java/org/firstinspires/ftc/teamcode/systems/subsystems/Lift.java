@@ -19,6 +19,8 @@ public class Lift {
 
     final int[] POSITIONS = { 0, -222, -444, -645 };
 
+    int targetPos = 0;
+
     public Lift() {}
     public Lift(Hardware hardware) {
         this.hardware = hardware;
@@ -26,7 +28,7 @@ public class Lift {
     }
 
     public void Move(int targetPosIndex) {
-        int targetPos = POSITIONS[targetPosIndex];
+        targetPos = POSITIONS[targetPosIndex];
 
         int currentPos = hardware.getLiftPosition();
 
@@ -35,6 +37,21 @@ public class Lift {
 
         pid.DashTelemetry(currentPos, targetPos);
     }
+
+    public void Move(double joystick) {
+        targetPos -= (joystick * 10);
+
+        if(targetPos < -750) targetPos = -750;
+        if(targetPos > 0) targetPos = 0;
+
+        int currentPos = hardware.getLiftPosition();
+
+        double power = pid.Calculate(targetPos, currentPos);
+        hardware.setLiftPower(power);
+
+        pid.DashTelemetry(currentPos, targetPos);
+    }
+
 
     public int GetNumPositions() {
         return POSITIONS.length;

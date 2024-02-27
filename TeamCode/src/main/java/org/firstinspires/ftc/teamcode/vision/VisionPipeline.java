@@ -16,13 +16,13 @@ import java.util.Objects;
 
 public class VisionPipeline extends OpenCvPipeline {
 
-    public final int WIDTH = 640;
-    public final int HEIGHT = 480;
+    public final int WIDTH = 1280;
+    public final int HEIGHT = 720;
 
-    public Scalar lowBlue = new Scalar(90, 100, 100);
-    public Scalar highBlue = new Scalar(145, 255, 255);
+    public Scalar lowBlue = new Scalar(105, 205, 0);
+    public Scalar highBlue = new Scalar(255, 255, 85);
 
-    public Scalar lowRed = new Scalar(0, 100, 100);
+    public Scalar lowRed = new Scalar(0, 190, 190);
     public Scalar highRed = new Scalar(40, 255, 255);
 
     private volatile vPos pos = vPos.RIGHT;
@@ -48,7 +48,6 @@ public class VisionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-
         Imgproc.GaussianBlur(input, blur, new Size(3, 3), 0, 0);
 
         Imgproc.cvtColor(blur, hsv, Imgproc.COLOR_RGB2HSV);
@@ -59,6 +58,16 @@ public class VisionPipeline extends OpenCvPipeline {
         {
             Core.inRange(hsv, lowRed, highRed, mask);
         }
+
+        Imgproc.dilate(mask, mask, new Mat());
+        Imgproc.dilate(mask, mask, new Mat());
+        Imgproc.erode(mask, mask, new Mat());
+        Imgproc.erode(mask, mask, new Mat());
+
+        Imgproc.erode(mask, mask, new Mat());
+        Imgproc.erode(mask, mask, new Mat());
+        Imgproc.dilate(mask, mask, new Mat());
+        Imgproc.dilate(mask, mask, new Mat());
 
         Imgproc.Canny(mask, edges, 100, 300);
 
@@ -80,24 +89,24 @@ public class VisionPipeline extends OpenCvPipeline {
         for (int i = 0; i != boundRect.length; i++) {
             if (boundRect[i].area() > maxArea) {
                 maxArea = boundRect[i].area();
-                maxAreaX = boundRect[i].x;
+                maxAreaX = boundRect[i].x / 2;
             }
             // draw bounding rectangles on mat
             // the mat has been converted to HSV so we need to use HSV as well
-            Imgproc.rectangle(hsv, boundRect[i], new Scalar(255, 0, 0));
+            Imgproc.rectangle(mask, boundRect[i], new Scalar(255, 0, 0));
         }
 
         if (maxAreaX < WIDTH / 3) {
             pos = vPos.LEFT;
         } else if (maxAreaX < WIDTH * 2 / 3) {
-            pos = vPos.CENTER;
-        } else {
             pos = vPos.RIGHT;
+        } else {
+            pos = vPos.CENTER;
         }
 
         Imgproc.cvtColor(hsv, out, Imgproc.COLOR_HSV2RGB);
 
-        return out;
+        return mask;
     }
 
     public enum vPos {

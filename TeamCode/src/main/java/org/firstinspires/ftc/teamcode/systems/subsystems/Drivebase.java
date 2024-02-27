@@ -16,12 +16,14 @@ public class Drivebase {
         this.driver = driver;
     }
 
-    public void Drive(double multiplier) {
+    public void Drive(boolean multiplierToggle) {
         double y = -driver.left_stick_y; // Remember, Y stick value is reversed
         double x = driver.left_stick_x * strafe; // Counteract imperfect strafing
         double rx = driver.right_stick_x;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+
+        double multiplier = multiplierToggle ? 0.3 : 1;
 
         double frontLeftPower = ((y + x + rx) / denominator) * multiplier;
         double backLeftPower = ((y - x + rx) / denominator) * multiplier;
