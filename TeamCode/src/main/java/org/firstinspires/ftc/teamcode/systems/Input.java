@@ -9,9 +9,13 @@ public class Input {
 
     public boolean multiplierToggle = false;
 
+    public boolean fastMultiplierToggle = false;
+
     public boolean manualLift = false;
 
     public int liftLevel = 0;
+
+    public int liftPos = 0;
 
     public int intakeLevel = 0;
 
@@ -77,6 +81,10 @@ public class Input {
             multiplierToggle = !multiplierToggle;
         }
 
+        if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
+            fastMultiplierToggle = !fastMultiplierToggle;
+        }
+
         intakePower = currentGamepad2.right_trigger - currentGamepad2.left_trigger;
 
         if (currentGamepad2.x && !previousGamepad2.x) {
@@ -106,9 +114,10 @@ public class Input {
             if(pullupLevel >= pullupNumPos) pullupLevel = pullupNumPos - 1;
         }
 
-        opMode.telemetry.addData("Speed", multiplierToggle ? "30%" : "100%");
+        opMode.telemetry.addData("Speed", fastMultiplierToggle ? "75%" : multiplierToggle ? "30%" : "100%");
         opMode.telemetry.addData("Intake Level", intakeLevel);
         opMode.telemetry.addData("Lift Level", liftLevel);
+        opMode.telemetry.addData("Lift Pos", liftPos);
         opMode.telemetry.update();
     }
 

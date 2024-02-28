@@ -19,10 +19,10 @@ public class VisionPipeline extends OpenCvPipeline {
     public final int WIDTH = 1280;
     public final int HEIGHT = 720;
 
-    public Scalar lowBlue = new Scalar(105, 205, 0);
+    public Scalar lowBlue = new Scalar(85, 190, 0);
     public Scalar highBlue = new Scalar(255, 255, 85);
 
-    public Scalar lowRed = new Scalar(0, 100, 100);
+    public Scalar lowRed = new Scalar(0, 60, 60);
     public Scalar highRed = new Scalar(40, 255, 255);
 
     private volatile vPos pos = vPos.LEFT;
@@ -39,6 +39,8 @@ public class VisionPipeline extends OpenCvPipeline {
     Mat out = new Mat();
 
     Mat hierarchy = new Mat();
+
+    Mat kernel = new Mat();
 
     boolean isBlue = false;
 
@@ -64,15 +66,15 @@ public class VisionPipeline extends OpenCvPipeline {
             Core.inRange(hsv, lowRed, highRed, mask);
         }
 
-        Imgproc.dilate(mask, mask, new Mat());
-        Imgproc.dilate(mask, mask, new Mat());
-        Imgproc.erode(mask, mask, new Mat());
-        Imgproc.erode(mask, mask, new Mat());
+        Imgproc.dilate(mask, mask, kernel);
+        Imgproc.dilate(mask, mask, kernel);
+        Imgproc.erode(mask, mask, kernel);
+        Imgproc.erode(mask, mask, kernel);
 
-        Imgproc.erode(mask, mask, new Mat());
-        Imgproc.erode(mask, mask, new Mat());
-        Imgproc.dilate(mask, mask, new Mat());
-        Imgproc.dilate(mask, mask, new Mat());
+        Imgproc.erode(mask, mask, kernel);
+        Imgproc.erode(mask, mask, kernel);
+        Imgproc.dilate(mask, mask, kernel);
+        Imgproc.dilate(mask, mask, kernel);
 
         //Imgproc.Canny(mask, edges, 100, 300);
 
@@ -135,7 +137,7 @@ public class VisionPipeline extends OpenCvPipeline {
 
         objectArea = biggestArea;
 
-        if(biggestArea > 50000) {
+        if(biggestArea > 3000) {
             if (maxAreaX < WIDTH / 2) {
                 pos = vPos.CENTER;
             }

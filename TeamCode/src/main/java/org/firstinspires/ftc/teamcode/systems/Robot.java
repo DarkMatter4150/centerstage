@@ -48,7 +48,7 @@ public class Robot {
     }
 
     public void Drive() {
-        drivebase.Drive(input.multiplierToggle);
+        drivebase.Drive(input.multiplierToggle, input.fastMultiplierToggle);
     }
 
     public void Lift() {
@@ -58,6 +58,8 @@ public class Robot {
         else {
             lift.Move(input.liftLevel);
         }
+
+        input.liftPos = hardware.getLiftPosition();
     }
 
     public void Intake() {

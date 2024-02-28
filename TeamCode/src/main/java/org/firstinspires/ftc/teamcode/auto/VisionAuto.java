@@ -32,7 +32,7 @@ public class VisionAuto extends OpMode {
 
     @Override
     public void init() {
-        pipeline = new VisionPipeline("BLUE");
+        pipeline = new VisionPipeline(false);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
