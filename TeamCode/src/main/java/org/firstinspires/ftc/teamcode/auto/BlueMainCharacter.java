@@ -26,15 +26,17 @@ public class BlueMainCharacter extends OpMode {
                         //TODO: Add actions here
 
                         .strafeTo(tapes[loc.ordinal()])
+                        //TODO: Add outtake here
                         .strafeToConstantHeading(boards[loc.ordinal()])
-                        .strafeTo(boards[1])
-                        .strafeTo(stacks[0])
-                        .strafeTo(boards[1])
-                        .strafeTo(stacks[0])
-                        .strafeTo(boards[1])
-                        .strafeTo(stacks[0])
-                        .strafeTo(boards[1])
+                        //TODO: Add slides and bucket here
+//                        .strafeTo(stacks[0])
+//                        .strafeTo(boards[1])
+//                        .strafeTo(stacks[0])
+//                        .strafeTo(boards[1])
+//                        .strafeTo(stacks[0])
+//                        .strafeTo(boards[1])
                         .strafeTo(new Vector2d(48, 60))
+                        .strafeTo(new Vector2d(62, 60))
                         .build());
 
     }

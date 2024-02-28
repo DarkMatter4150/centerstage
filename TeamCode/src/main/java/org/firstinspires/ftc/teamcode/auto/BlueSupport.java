@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.systems.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.vision.VisionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -37,8 +38,11 @@ public class BlueSupport extends OpMode {
 
     @Override
     public void init() {
+        Intake intake = new Intake();
+        Actions.runBlocking();
         drive = new MecanumDrive(hardwareMap, startPoseSupport);
-        pipeline = new VisionPipeline("RED");
+        pipeline = new VisionPipeline("BLUE");
+        intake = new Intake();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 

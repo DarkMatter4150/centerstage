@@ -73,11 +73,13 @@ public class RedSupport extends OpMode {
 
                         .lineToY(-36)
                         .strafeToConstantHeading(tapes[loc.ordinal()])
+                        //TODO: Add outtake here
                         .strafeToConstantHeading(new Vector2d(-36, -36))
                         .strafeToConstantHeading(new Vector2d(-35, -4))
                         .strafeToLinearHeading(new Vector2d(48, -13),Math.PI)
                         .waitSeconds(2.6)
                         .strafeTo(boards[loc.ordinal()])
+                        //TODO: Add slides and bucket code here
                         .strafeTo(new Vector2d(48, -12))
                         .strafeTo(new Vector2d(72, -10))
                         .build());
