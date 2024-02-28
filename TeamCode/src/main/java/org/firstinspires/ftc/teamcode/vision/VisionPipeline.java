@@ -22,10 +22,12 @@ public class VisionPipeline extends OpenCvPipeline {
     public Scalar lowBlue = new Scalar(105, 205, 0);
     public Scalar highBlue = new Scalar(255, 255, 85);
 
-    public Scalar lowRed = new Scalar(0, 190, 190);
+    public Scalar lowRed = new Scalar(0, 100, 100);
     public Scalar highRed = new Scalar(40, 255, 255);
 
-    private volatile vPos pos = vPos.RIGHT;
+    private volatile vPos pos = vPos.LEFT;
+
+    private volatile double objectArea = 0;
 
     Mat blur = new Mat();
 
@@ -45,6 +47,9 @@ public class VisionPipeline extends OpenCvPipeline {
         isBlue = Objects.equals(color, "BLUE");
     }
 
+    public VisionPipeline(boolean isBlue) {
+        this.isBlue = isBlue;
+    }
 
     @Override
     public Mat processFrame(Mat input) {
@@ -69,11 +74,29 @@ public class VisionPipeline extends OpenCvPipeline {
         Imgproc.dilate(mask, mask, new Mat());
         Imgproc.dilate(mask, mask, new Mat());
 
-        Imgproc.Canny(mask, edges, 100, 300);
+        //Imgproc.Canny(mask, edges, 100, 300);
 
         List<MatOfPoint> contours = new ArrayList<>();
 
-        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+        //Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        double biggestArea = -1;
+        MatOfPoint biggest = null;
+        for (MatOfPoint con : contours) {
+            double area = Imgproc.contourArea(con);
+            if (biggestArea < area) {
+                biggestArea = area;
+                biggest = con;
+            }
+        }
+
+        Mat redraw = new Mat();
+        redraw.create(input.size(), input.type());
+        int contourIndex = contours.indexOf(biggest);
+        Imgproc.drawContours(redraw, contours, contourIndex, new Scalar(180, 136, 235), -1);
+
 
         MatOfPoint2f[] contoursPoly  = new MatOfPoint2f[contours.size()];
         Rect[] boundRect = new Rect[contours.size()];
@@ -87,26 +110,46 @@ public class VisionPipeline extends OpenCvPipeline {
         double maxArea = 0;
         int maxAreaX = 0;
         for (int i = 0; i != boundRect.length; i++) {
-            if (boundRect[i].area() > maxArea) {
-                maxArea = boundRect[i].area();
-                maxAreaX = boundRect[i].x / 2;
+            if (i == contourIndex) {
+                if (boundRect[i].area() > maxArea) {
+                    maxArea = boundRect[i].area();
+                    maxAreaX = boundRect[i].x;
+                }
             }
             // draw bounding rectangles on mat
             // the mat has been converted to HSV so we need to use HSV as well
-            Imgproc.rectangle(mask, boundRect[i], new Scalar(255, 0, 0));
+            //change the bounding box color if contour is biggest in the array
+            if(i == contourIndex)
+                Imgproc.rectangle(hsv, boundRect[i], new Scalar(255, 255, 255));
+            else
+                Imgproc.rectangle(hsv, boundRect[i], new Scalar(0, 255, 255));
         }
 
-        if (maxAreaX < WIDTH / 3) {
+//        if (maxAreaX < WIDTH / 3) {
+//            pos = vPos.LEFT;
+//        } else if (maxAreaX < WIDTH * 2 / 3) {
+//            pos = vPos.CENTER;
+//        } else {
+//            pos = vPos.RIGHT;
+//        }
+
+        objectArea = biggestArea;
+
+        if(biggestArea > 50000) {
+            if (maxAreaX < WIDTH / 2) {
+                pos = vPos.CENTER;
+            }
+            if(maxAreaX > WIDTH / 2) {
+                pos = vPos.RIGHT;
+            }
+        }
+        else {
             pos = vPos.LEFT;
-        } else if (maxAreaX < WIDTH * 2 / 3) {
-            pos = vPos.RIGHT;
-        } else {
-            pos = vPos.CENTER;
         }
 
         Imgproc.cvtColor(hsv, out, Imgproc.COLOR_HSV2RGB);
 
-        return mask;
+        return out;
     }
 
     public enum vPos {
@@ -117,5 +160,9 @@ public class VisionPipeline extends OpenCvPipeline {
 
     public vPos getPos() {
         return pos;
+    }
+
+    public double getArea() {
+        return objectArea;
     }
 }
