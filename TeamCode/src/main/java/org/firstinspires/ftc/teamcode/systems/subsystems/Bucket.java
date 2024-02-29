@@ -4,6 +4,11 @@ import static android.os.SystemClock.sleep;
 
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+
 import org.firstinspires.ftc.teamcode.systems.Hardware;
 
 public class Bucket {

@@ -69,6 +69,13 @@ public class BlueSupport extends OpMode {
     }
 
     @Override
+    public void init_loop() {
+        loc = pipeline.getPos();
+        telemetry.addData("Camera", "Position: " + loc);
+        telemetry.update();
+    }
+
+    @Override
     public void start() {
         Actions.runBlocking(
                 drive.actionBuilder(startPoseSupport)
@@ -89,8 +96,5 @@ public class BlueSupport extends OpMode {
 
     @Override
     public void loop() {
-        loc = pipeline.getPos();
-        telemetry.addData("Camera", "Position: " + loc);
-        telemetry.update();
     }
 }

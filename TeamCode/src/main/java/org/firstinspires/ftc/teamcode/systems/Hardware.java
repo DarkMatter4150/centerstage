@@ -89,8 +89,6 @@ public class Hardware {
         return liftLeft.getCurrentPosition();
     }
 
-
-
     public void setIntakePower(double power) {
         intake.setPower(power);
     }
