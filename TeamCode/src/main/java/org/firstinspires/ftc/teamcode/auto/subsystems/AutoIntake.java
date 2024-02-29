@@ -52,29 +52,21 @@ public class AutoIntake {
     }
 
     public class InAction implements Action {
-        int seconds;
-        public InAction(int seconds) {
-            this.seconds = seconds;
+        public InAction() {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             intake.setPower(1);
-            new SleepAction(seconds).run(packet);
-            intake.setPower(0);
             return false;
         }
     }
 
     public class OutAction implements Action {
-        int seconds;
-        public OutAction(int seconds) {
-            this.seconds = seconds;
+        public OutAction() {
         }
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             intake.setPower(-1);
-            new SleepAction(seconds).run(packet);
-            intake.setPower(0);
             return false;
         }
     }
@@ -97,12 +89,12 @@ public class AutoIntake {
         return new DownAction(intakeLevel);
     }
 
-    public Action InAction(int seconds) {
-        return new InAction(seconds);
+    public Action InAction() {
+        return new InAction();
     }
 
-    public Action OutAction(int seconds) {
-        return new OutAction(seconds);
+    public Action OutAction() {
+        return new OutAction();
     }
 
     public Action StopAction() {

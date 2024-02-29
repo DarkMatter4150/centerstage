@@ -138,11 +138,13 @@ public class BaseAuto extends OpMode {
     public void start() {
         Actions.runBlocking(
             new SequentialAction(
-                toTapes,
-                intake.OutAction(1000),
-                toBoards,
-                placeSequence,
-                toPark
+                //toTapes,
+                intake.OutAction(),
+                new SleepAction(1),
+                intake.StopAction()
+                //toBoards,
+                //placeSequence
+                //toPark
             )
         );
     }

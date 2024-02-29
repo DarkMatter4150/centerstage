@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -8,36 +12,37 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.auto.subsystems.AutoBucket;
+import org.firstinspires.ftc.teamcode.auto.subsystems.AutoIntake;
+import org.firstinspires.ftc.teamcode.auto.subsystems.AutoLift;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.systems.Robot;
+import org.firstinspires.ftc.teamcode.systems.subsystems.Bucket;
+import org.firstinspires.ftc.teamcode.systems.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.systems.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.vision.VisionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
-
 @Config
 @Autonomous(group = "Autonomous", preselectTeleOp = "Tele")
 public class BlueMainCharacter extends OpMode {
     @Override
     public void start() {
         Actions.runBlocking(
-                drive.actionBuilder(startPoseMC)
-                        //TODO: Add actions here
+                new SequentialAction(
+                        toTapes,
+                        intake.OutAction(),
+                        toBoards,
+                        scoringSequence,
+                        toPark
 
-                        .strafeTo(tapes[loc.ordinal()])
-                        //TODO: Add outtake here
-                        .strafeToConstantHeading(boards[loc.ordinal()])
-                        //TODO: Add slides and bucket here
-//                        .strafeTo(stacks[0])
-//                        .strafeTo(boards[1])
-//                        .strafeTo(stacks[0])
-//                        .strafeTo(boards[1])
-//                        .strafeTo(stacks[0])
-//                        .strafeTo(boards[1])
-                        .strafeTo(new Vector2d(48, 60))
-                        .strafeTo(new Vector2d(62, 60))
-                        .build());
+
+                )
+        );
 
     }
 
@@ -58,6 +63,14 @@ public class BlueMainCharacter extends OpMode {
 
     MecanumDrive drive;
 
+    AutoIntake intake;
+
+    Action toTapes;
+    Action toBoards;
+    Action toPark;
+
+    SequentialAction scoringSequence;
+
     OpenCvWebcam camera;
 
     VisionPipeline pipeline;
@@ -66,8 +79,11 @@ public class BlueMainCharacter extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, startPoseMC);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, startPoseMC);
         pipeline = new VisionPipeline("BLUE");
+        intake = new AutoIntake(hardwareMap);
+        AutoBucket bucket = new AutoBucket(hardwareMap);
+        AutoLift lift = new AutoLift(hardwareMap);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
@@ -77,21 +93,48 @@ public class BlueMainCharacter extends OpMode {
 
         //camera.getFocusControl().setMode(OpenCvCamera.FocusControl.Mode.AUTO);
 
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                camera.startStreaming(pipeline.WIDTH, pipeline.HEIGHT, OpenCvCameraRotation.UPRIGHT);
-                camera.setPipeline(pipeline);
-            }
-            @Override
-            public void onError(int errorCode)
-            {
-                /*
-                 * This will be called if the camera could not be opened
-                 */
-            }
-        });
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+         @Override
+         public void onOpened() {
+             camera.startStreaming(pipeline.WIDTH, pipeline.HEIGHT, OpenCvCameraRotation.UPRIGHT);
+             camera.setPipeline(pipeline);
+         }
+
+         @Override
+         public void onError(int errorCode) {
+             /*
+              * This will be called if the camera could not be opened
+              */
+         }
+     });
+
+            toTapes = drive.actionBuilder(drive.pose)
+                .lineToY(-36)
+                .strafeToConstantHeading(tapes[loc.ordinal()])
+                .build();
+            toBoards = drive.actionBuilder(drive.pose)
+                .strafeToConstantHeading(new Vector2d(-36, -36))
+                .strafeToConstantHeading(new Vector2d(-35, -4))
+                .strafeToLinearHeading(new Vector2d(48, -13),Math.PI)
+                .waitSeconds(2.6)
+                .strafeTo(boards[loc.ordinal()])
+                .build();
+            toPark = drive.actionBuilder(drive.pose)
+                .strafeTo(new Vector2d(48, -12))
+                .strafeTo(new Vector2d(72, -10))
+                .build();
+            scoringSequence = new SequentialAction(
+                lift.LevelAction(1),
+                bucket.ArmUpAction(),
+                        bucket.RotateDownAction(),
+                        new SleepAction(1000),
+                bucket.RotateUpAction(),
+                        bucket.ArmDownAction(),
+                        lift.LevelAction(0)
+                        );
+
+
+
+
     }
 }
