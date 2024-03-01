@@ -29,17 +29,17 @@ public class MeepMeepTesting {
     static Vector2d[] tapesBlueRight = { new Vector2d(9, 30), new Vector2d(15, 24), new Vector2d(31, 30)};
     //Location of tape spikes by backboard (Blue)
     //MeepMeep View
-    static Vector2d[] tapesBlueLeft = { new Vector2d(-55, 33), new Vector2d(-40, 23), new Vector2d(-32.75, 30)};
+    static Vector2d[] tapesBlueLeft = { new Vector2d(-47, 36), new Vector2d(-36, 24), new Vector2d(-24, 36)};
     //Location of tape spikes closest to stacks (Blue)
     //MeepMeep View
-    static Vector2d[] boardsBlue = { new Vector2d(48, 30), new Vector2d(48, 36), new Vector2d(48, 42)};
+    static Vector2d[] boardsBlue = { new Vector2d(40, 30), new Vector2d(40, 36), new Vector2d(40, 42)};
     //Location of Backboard for Blue Alliance
 
     static Vector2d[] stacksBlue = { new Vector2d(-60, 36), new Vector2d(-60, 24), new Vector2d(-60, 12)};
       //Location of stacks for Blue Alliance
 
 
-    static Pose2d startPoseMCRed = new Pose2d(12, -62, Math.toRadians(180));
+    static Pose2d startPoseMCRed = new Pose2d(12, -62, Math.toRadians(270));
     static Pose2d startPoseRedSup = new Pose2d(-40, -62, Math.toRadians(90));
     //Location for Red SUpport Role
     static Vector2d[] tapesRedLeft = { new Vector2d(-55, -30), new Vector2d(-41, -22), new Vector2d(-32, -30)};
@@ -95,17 +95,18 @@ public class MeepMeepTesting {
                 //2   (-24, 36)
                 //1 (-36, 24)
                 //0 (-48, 36)
-//                                .strafeToConstantHeading(new Vector2d(-36, 36))
-//                                .strafeToConstantHeading(tapesBlueLeft[loc])
-//                                .strafeToConstantHeading(new Vector2d(-36, 36))
-//                                .strafeToConstantHeading(new Vector2d(-35, 5))
-//                                .strafeToLinearHeading(new Vector2d(48, 13),Math.PI)
-//                                .waitSeconds(2.6)
-//                                .strafeTo(boardsBlue[loc])
-//                                 .waitSeconds(.5)
-//                                .strafeTo(new Vector2d(0, 0))
-//                                .strafeTo(stacksBlue[2])
-//                                .strafeTo(new Vector2d(48, 13))
+                //Updated Blue Support ROLE (USE FOR STATE)
+                                .strafeToConstantHeading(new Vector2d(-36, 36))
+                                .strafeToConstantHeading(tapesBlueLeft[locBlue])
+                                .strafeToConstantHeading(new Vector2d(-36, 36))
+                                .strafeToConstantHeading(new Vector2d(-35, 10))
+                                .strafeToLinearHeading(new Vector2d(48, 13),Math.PI)
+
+                                .waitSeconds(2.6)
+                                .strafeTo(boardsBlue[locBlue])
+                                .strafeTo(new Vector2d(44, boardsBlue[locBlue].y))
+                                .strafeTo(new Vector2d(48, 7))
+                                .strafeTo(new Vector2d(62, 15))
 
 
 
@@ -122,20 +123,20 @@ public class MeepMeepTesting {
                     //2 (-37.25, 30)
                     //1 (-40, 23)
                     //0 (-55, 33)
-                    .strafeToLinearHeading(tapesBlueLeft[locBlue], 220)
-                    .strafeToLinearHeading(new Vector2d(-45, 10), Math.PI)
-                    .strafeToConstantHeading(new Vector2d(48, 12))
-                    .strafeTo(boardsBlue[locBlue])
-                    .strafeTo(new Vector2d(36, 12))
-                    .strafeTo(stacksBlue[2])
-                    .strafeTo(new Vector2d(48, 12))
-                    .strafeTo(boardsBlue[0])
-                     .strafeTo(new Vector2d(36, 12))            
-                     .strafeTo(stacksBlue[2])                   
-                     .strafeTo(new Vector2d(48, 12))            
-                     .strafeTo(boardsBlue[0])
-                     .strafeTo(new Vector2d(48, 12))
-                    .strafeTo(parkSupportBlue)
+//                    .strafeToLinearHeading(tapesBlueLeft[locBlue], 220)
+//                    .strafeToLinearHeading(new Vector2d(-45, 10), Math.PI)
+//                    .strafeToConstantHeading(new Vector2d(48, 12))
+//                    .strafeTo(boardsBlue[locBlue])
+//                    .strafeTo(new Vector2d(36, 12))
+//                    .strafeTo(stacksBlue[2])
+//                    .strafeTo(new Vector2d(48, 12))
+//                    .strafeTo(boardsBlue[0])
+//                     .strafeTo(new Vector2d(36, 12))
+//                     .strafeTo(stacksBlue[2])
+//                     .strafeTo(new Vector2d(48, 12))
+//                     .strafeTo(boardsBlue[0])
+//                     .strafeTo(new Vector2d(48, 12))
+//                    .strafeTo(parkSupportBlue)
 
                      .build());
 
@@ -146,13 +147,13 @@ public class MeepMeepTesting {
         myBotBlueMC.runAction(myBotBlueMC.getDrive().actionBuilder(startPoseMCBlue)
                         .strafeTo(tapesBlueRight[locBlue])
                         .strafeToConstantHeading(boardsBlue[locBlue])
-                        .strafeTo(boardsBlue[1])
-                        .strafeTo(stacksBlue[0])
-                        .strafeTo(boardsBlue[1])
-                        .strafeTo(stacksBlue[0])
-                        .strafeTo(boardsBlue[1])
-                        .strafeTo(stacksBlue[0])
-                        .strafeTo(boardsBlue[1])
+//                        .strafeTo(boardsBlue[1])
+//                        .strafeTo(stacksBlue[0])
+//                        .strafeTo(boardsBlue[1])
+//                        .strafeTo(stacksBlue[0])
+//                        .strafeTo(boardsBlue[1])
+//                        .strafeTo(stacksBlue[0])
+//                        .strafeTo(boardsBlue[1])
                         .strafeTo(new Vector2d(48, 60))
                         .strafeTo(parkMCBlue)
                          
@@ -167,14 +168,14 @@ public class MeepMeepTesting {
                         .strafeTo(new Vector2d(48, -10))
                         .strafeTo(boardsRed[locRed])
 //                        .waitSeconds(.5)
-                        .strafeTo(new Vector2d(36, -12))
-                        .strafeTo(stacksRed[2])
-                        .strafeTo(new Vector2d(48, -10))
-                        .strafeTo(boardsRed[0])
-                        .strafeTo(new Vector2d(36, -12))
-                        .strafeTo(stacksRed[2])
-                        .strafeTo(new Vector2d(48, -10))
-                        .strafeTo(boardsRed[0])
+//                        .strafeTo(new Vector2d(36, -12))
+//                        .strafeTo(stacksRed[2])
+//                        .strafeTo(new Vector2d(48, -10))
+//                        .strafeTo(boardsRed[0])
+//                        .strafeTo(new Vector2d(36, -12))
+//                        .strafeTo(stacksRed[2])
+//                        .strafeTo(new Vector2d(48, -10))
+//                        .strafeTo(boardsRed[0])
                         .strafeTo(new Vector2d(48, -10))
                         .strafeTo(parkSupportRed)
 
@@ -183,13 +184,13 @@ public class MeepMeepTesting {
         myBotRedMC.runAction(myBotRedMC.getDrive().actionBuilder(startPoseMCRed)
                         .strafeTo(tapesRedRight[locRed])
                         .strafeTo(boardsRed[locRed])
-                        .strafeTo(boardsRed[1])
-                        .strafeTo(stacksRed[0])
-                        .strafeTo(boardsRed[1])
-                        .strafeTo(stacksRed[0])
-                        .strafeTo(boardsRed[1])
-                        .strafeTo(stacksRed[0])
-                        .strafeTo(boardsRed[1])
+//                        .strafeTo(boardsRed[1])
+//                        .strafeTo(stacksRed[0])
+//                        .strafeTo(boardsRed[1])
+//                        .strafeTo(stacksRed[0])
+//                        .strafeTo(boardsRed[1])
+//                        .strafeTo(stacksRed[0])
+//                        .strafeTo(boardsRed[1])
                         .strafeTo(new Vector2d(48, -60))
                         .strafeTo(parkMCRed)
                         
