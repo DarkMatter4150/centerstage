@@ -25,14 +25,14 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(group = "Autonomous", preselectTeleOp = "Tele")
-public class RedMC extends OpMode {
-    Pose2d start = new Pose2d(16, -62, Math.toRadians(90));
-    Vector2d[] tapes = { new Vector2d(15, -30), new Vector2d(25, -20), new Vector2d(36, -30) };
-    Vector2d[] boards = { new Vector2d(48, -22), new Vector2d(48, -35), new Vector2d(48, -40) };
+public class BlueSupport extends OpMode {
+    Pose2d start = new Pose2d(16, 62, Math.toRadians(270));
+    Vector2d[] tapes = { new Vector2d(36, 30), new Vector2d(25, 20), new Vector2d(15, 30) };
+    Vector2d[] boards = { new Vector2d(48, 36), new Vector2d(48, 30), new Vector2d(48, 19.7) };
     int boardsCloseX = 54;
     int boardsFarX = 38;
     double outtakeTime = 1;
-    Vector2d park = new Vector2d(62, -56);
+    Vector2d park = new Vector2d(62, 56);
 
     MecanumDrive drive;
 
@@ -40,7 +40,7 @@ public class RedMC extends OpMode {
     AutoBucket bucket;
     AutoLift lift;
 
-    String color = "RED";
+    String color = "BLUE";
 
     OpenCvWebcam camera;
 
@@ -103,7 +103,7 @@ public class RedMC extends OpMode {
 
         toBoards = drive.actionBuilder(drive.pose)
                 .strafeToConstantHeading(boards[loc.ordinal()])
-                .turn(Math.toRadians(95))
+                .turn(Math.toRadians(-100))
                 .build();
         placeSequenceUp = new SequentialAction(
                 lift.LevelAction(1),
@@ -129,8 +129,8 @@ public class RedMC extends OpMode {
                 intake.StopAction()
         );
         toPark = drive.actionBuilder(new Pose2d(tapes[loc.ordinal()], Math.toRadians(180)))
-                .strafeTo(new Vector2d(38, -56))
-                .turn(Math.toRadians(10))
+                .strafeTo(new Vector2d(38, 56))
+                .turn(Math.toRadians(-10))
                 .strafeTo(park)
                 .build();
 

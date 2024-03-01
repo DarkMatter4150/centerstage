@@ -29,7 +29,7 @@ public class VisionPipeline extends OpenCvPipeline {
 
     private volatile double objectArea = 0;
 
-    public double objectIdentificationArea = 700;
+    public double objectIdentificationArea = 1200;
 
     Mat blur = new Mat();
     Mat hsv = new Mat();
