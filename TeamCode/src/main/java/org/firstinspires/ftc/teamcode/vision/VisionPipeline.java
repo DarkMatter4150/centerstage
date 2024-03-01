@@ -20,7 +20,7 @@ public class VisionPipeline extends OpenCvPipeline {
     public final int HEIGHT = 480;
 
     public Scalar lowBlue = new Scalar(85, 190, 0);
-    public Scalar highBlue = new Scalar(255, 255, 85);
+    public Scalar highBlue = new Scalar(255, 255, 160);
 
     public Scalar lowRed = new Scalar(0, 60, 60);
     public Scalar highRed = new Scalar(40, 255, 255);
@@ -29,7 +29,7 @@ public class VisionPipeline extends OpenCvPipeline {
 
     private volatile double objectArea = 0;
 
-    public double objectIdentificationArea = 1000;
+    public double objectIdentificationArea = 700;
 
     Mat blur = new Mat();
     Mat hsv = new Mat();
@@ -40,7 +40,7 @@ public class VisionPipeline extends OpenCvPipeline {
     Mat kernel = new Mat();
     Mat redraw = new Mat();
 
-    boolean isBlue = false;
+    boolean isBlue = true;
 
     public VisionPipeline() {};
     public VisionPipeline(String color) {
@@ -134,16 +134,30 @@ public class VisionPipeline extends OpenCvPipeline {
 
         objectArea = biggestArea;
 
-        if(biggestArea > objectIdentificationArea) {
-            if (maxAreaX < WIDTH / 2) {
-                pos = vPos.CENTER;
-            }
-            if(maxAreaX > WIDTH / 2) {
-                pos = vPos.RIGHT;
+        if(isBlue) {
+            if (biggestArea > objectIdentificationArea) {
+                if (maxAreaX < WIDTH / 2.5) {
+                    pos = vPos.CENTER;
+                }
+                if (maxAreaX > WIDTH / 2.5) {
+                    pos = vPos.RIGHT;
+                }
+            } else {
+                pos = vPos.LEFT;
             }
         }
-        else {
-            pos = vPos.LEFT;
+
+        if(!isBlue) {
+            if (biggestArea > objectIdentificationArea) {
+                if (maxAreaX < WIDTH / 2.5) {
+                    pos = vPos.CENTER;
+                }
+                if (maxAreaX > WIDTH / 2.5) {
+                    pos = vPos.RIGHT;
+                }
+            } else {
+                pos = vPos.LEFT;
+            }
         }
 
         mask.release();

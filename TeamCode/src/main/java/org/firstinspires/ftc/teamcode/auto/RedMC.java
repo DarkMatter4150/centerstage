@@ -12,7 +12,6 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.auto.subsystems.AutoBucket;
 import org.firstinspires.ftc.teamcode.auto.subsystems.AutoIntake;
@@ -26,14 +25,14 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(group = "Autonomous", preselectTeleOp = "Tele")
-public class BlueSupport extends OpMode {
-    Pose2d start = new Pose2d(16, 62, Math.toRadians(270));
-    Vector2d[] tapes = { new Vector2d(14, 30), new Vector2d(15, 24), new Vector2d(31, 30)};
-    Vector2d[] boards = {new Vector2d(48, 30), new Vector2d(48, 36), new Vector2d(48, 42)};
-    int boardsCloseX = 38;
-    int boardsFarX = 56;
+public class RedMC extends OpMode {
+    Pose2d start = new Pose2d(16, -62, Math.toRadians(0));
+    Vector2d[] tapes = { new Vector2d(36, -30), new Vector2d(25, -20), new Vector2d(15, -30) };
+    Vector2d[] boards = { new Vector2d(48, -36), new Vector2d(48, -30), new Vector2d(48, -19.7) };
+    int boardsCloseX = 54;
+    int boardsFarX = 38;
     double outtakeTime = 1;
-    Vector2d park = new Vector2d(62, 60);
+    Vector2d park = new Vector2d(62, -56);
 
     MecanumDrive drive;
 
@@ -41,7 +40,7 @@ public class BlueSupport extends OpMode {
     AutoBucket bucket;
     AutoLift lift;
 
-    String color = "BLUE";
+    String color = "RED";
 
     OpenCvWebcam camera;
 
@@ -92,18 +91,19 @@ public class BlueSupport extends OpMode {
     public void init_loop() {
         loc = pipeline.getPos();
         telemetry.addData("Camera Position", loc);
+        telemetry.addData("Camera Area", pipeline.getArea());
         telemetry.update();
     }
 
     @Override
     public void start() {
-        telemetry.clearAll();
+        telemetry.clear();
         telemetry.addData("Saved Camera Position", loc);
         telemetry.update();
 
         toBoards = drive.actionBuilder(drive.pose)
                 .strafeToConstantHeading(boards[loc.ordinal()])
-                .turn(Math.toRadians(-100))
+                .turn(Math.toRadians(100))
                 .build();
         placeSequenceUp = new SequentialAction(
                 lift.LevelAction(1),
@@ -112,15 +112,15 @@ public class BlueSupport extends OpMode {
                 bucket.RotateUpAction()
         );
         toBoardClose = drive.actionBuilder(new Pose2d(boards[loc.ordinal()], Math.toRadians(180)))
-                .strafeTo(new Vector2d(boardsFarX, boards[loc.ordinal()].y))
                 .strafeTo(new Vector2d(boardsCloseX, boards[loc.ordinal()].y))
+                .strafeTo(new Vector2d(boardsFarX, boards[loc.ordinal()].y))
                 .build();
         placeSequenceDown = new SequentialAction(
                 bucket.RotateDownAction(),
                 bucket.ArmDownAction(),
                 lift.LevelAction(0)
         );
-        toTapes = drive.actionBuilder(new Pose2d(new Vector2d(38, boards[loc.ordinal()].y), Math.toRadians(180)))
+        toTapes = drive.actionBuilder(new Pose2d(new Vector2d(boardsFarX, boards[loc.ordinal()].y), Math.toRadians(180)))
                 .strafeTo(tapes[loc.ordinal()])
                 .build();
         outtakeSequence = new SequentialAction(
@@ -129,7 +129,8 @@ public class BlueSupport extends OpMode {
                 intake.StopAction()
         );
         toPark = drive.actionBuilder(new Pose2d(tapes[loc.ordinal()], Math.toRadians(180)))
-                .strafeTo(new Vector2d(38, 58))
+                .strafeTo(new Vector2d(38, -56))
+                .turn(Math.toRadians(10))
                 .strafeTo(park)
                 .build();
 
