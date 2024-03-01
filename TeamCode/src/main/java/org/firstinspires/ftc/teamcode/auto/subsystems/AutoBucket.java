@@ -76,7 +76,5 @@ public class AutoBucket {
         return new RotateDownAction();
     }
 
-    public Action RotateUpAction() {
-        return new RotateUpAction();
-    }
+    public Action RotateUpAction() { return new RotateUpAction(); }
 }

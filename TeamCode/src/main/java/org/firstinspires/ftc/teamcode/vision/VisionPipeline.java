@@ -16,8 +16,8 @@ import java.util.Objects;
 
 public class VisionPipeline extends OpenCvPipeline {
 
-    public final int WIDTH = 1280;
-    public final int HEIGHT = 720;
+    public final int WIDTH = 640;
+    public final int HEIGHT = 480;
 
     public Scalar lowBlue = new Scalar(85, 190, 0);
     public Scalar highBlue = new Scalar(255, 255, 85);
@@ -29,18 +29,16 @@ public class VisionPipeline extends OpenCvPipeline {
 
     private volatile double objectArea = 0;
 
-    Mat blur = new Mat();
+    public double objectIdentificationArea = 1000;
 
+    Mat blur = new Mat();
     Mat hsv = new Mat();
     Mat mask = new Mat();
-
     Mat edges = new Mat();
-
     Mat out = new Mat();
-
     Mat hierarchy = new Mat();
-
     Mat kernel = new Mat();
+    Mat redraw = new Mat();
 
     boolean isBlue = false;
 
@@ -94,7 +92,6 @@ public class VisionPipeline extends OpenCvPipeline {
             }
         }
 
-        Mat redraw = new Mat();
         redraw.create(input.size(), input.type());
         int contourIndex = contours.indexOf(biggest);
         Imgproc.drawContours(redraw, contours, contourIndex, new Scalar(180, 136, 235), -1);
@@ -137,7 +134,7 @@ public class VisionPipeline extends OpenCvPipeline {
 
         objectArea = biggestArea;
 
-        if(biggestArea > 3000) {
+        if(biggestArea > objectIdentificationArea) {
             if (maxAreaX < WIDTH / 2) {
                 pos = vPos.CENTER;
             }
@@ -148,6 +145,8 @@ public class VisionPipeline extends OpenCvPipeline {
         else {
             pos = vPos.LEFT;
         }
+
+        mask.release();
 
         Imgproc.cvtColor(hsv, out, Imgproc.COLOR_HSV2RGB);
 

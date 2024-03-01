@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -30,9 +31,11 @@ public class VisionAuto extends OpMode {
 
     double area = 0;
 
+    String color = "BLUE";
+
     @Override
     public void init() {
-        pipeline = new VisionPipeline(false);
+        pipeline = new VisionPipeline(color);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
@@ -78,7 +81,9 @@ public class VisionAuto extends OpMode {
 
     @Override
     public void start() {
-
+        telemetry.clearAll();
+        telemetry.addData("Saved Camera Position", loc);
+        telemetry.update();
     }
 
     @Override

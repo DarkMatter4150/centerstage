@@ -41,27 +41,26 @@ public class AutoLift {
         pid = new PID(Kp, Ki, Kd);
     }
 
-    public void Move(int targetPosIndex) {
-        targetPos = POSITIONS[targetPosIndex];
-
-        int currentPos = liftLeft.getCurrentPosition();
-
-        double power = pid.Calculate(targetPos, currentPos);
-        liftLeft.setPower(power);
-        liftRight.setPower(-power);
-
-        pid.DashTelemetry(currentPos, targetPos);
-    }
-
     public class LevelAction implements Action {
         int targetPosIndex;
         public LevelAction(int targetPosIndex) {
             this.targetPosIndex = targetPosIndex;
         }
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            Move(targetPosIndex);
-            return false;
+            int currentPos = liftLeft.getCurrentPosition();
+
+            targetPos = POSITIONS[targetPosIndex];
+
+            double error = targetPos - currentPos;
+
+            double power = Kp * error;
+
+            liftLeft.setPower(power);
+            liftRight.setPower(-power);
+
+            return Math.abs(error) > 75;
         }
     }
 
