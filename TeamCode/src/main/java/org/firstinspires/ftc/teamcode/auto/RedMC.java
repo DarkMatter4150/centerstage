@@ -120,11 +120,16 @@ public class RedMC extends OpMode {
                 //Change back to loc.ordinal()
                 .build();
         placeSequenceDown = new SequentialAction(
+                lift.LevelAction(1),
                 bucket.RotateDownAction(),
                 bucket.ArmDownAction(),
-                lift.LevelAction(1),
                 new SleepAction(1),
                 lift.LevelAction(0)
+                //Use below if above does not work
+//                bucket.ArmDownAction(),
+//                lift.LevelAction(1),
+//                new SleepAction(1),
+//                lift.LevelAction(0)
         );
         toTapes = drive.actionBuilder(new Pose2d(new Vector2d(boardsFarX, boards[1].y), Math.toRadians(180)))
                 .strafeTo(tapes[1])
