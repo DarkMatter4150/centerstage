@@ -27,12 +27,12 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(group = "Autonomous", preselectTeleOp = "Tele")
 public class BlueMC extends OpMode {
     Pose2d start = new Pose2d(16, 62, Math.toRadians(270));
-    Vector2d[] tapes = { new Vector2d(36, 30), new Vector2d(25, 20), new Vector2d(15, 30) };
-    Vector2d[] boards = { new Vector2d(48, 36), new Vector2d(48, 30), new Vector2d(48, 19.7) };
-    int boardsCloseX = 54;
+    Vector2d[] tapes = { new Vector2d(40, 30), new Vector2d(29, 17), new Vector2d(20, 30) };
+    Vector2d[] boards = { new Vector2d(48, 36), new Vector2d(48, 27), new Vector2d(48, 19.7) };
+    int boardsCloseX = 60;
     int boardsFarX = 38;
     double outtakeTime = 1;
-    Vector2d park = new Vector2d(62, 56);
+    Vector2d park = new Vector2d(70, 56);
 
     MecanumDrive drive;
 
@@ -118,6 +118,8 @@ public class BlueMC extends OpMode {
         placeSequenceDown = new SequentialAction(
                 bucket.RotateDownAction(),
                 bucket.ArmDownAction(),
+                lift.LevelAction(2),
+                new SleepAction(1),
                 lift.LevelAction(0)
         );
         toTapes = drive.actionBuilder(new Pose2d(new Vector2d(boardsFarX, boards[loc.ordinal()].y), Math.toRadians(180)))

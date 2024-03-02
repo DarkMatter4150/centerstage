@@ -27,12 +27,14 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(group = "Autonomous", preselectTeleOp = "Tele")
 public class RedMC extends OpMode {
     Pose2d start = new Pose2d(16, -62, Math.toRadians(90));
-    Vector2d[] tapes = { new Vector2d(15, -30), new Vector2d(25, -20), new Vector2d(36, -30) };
-    Vector2d[] boards = { new Vector2d(48, -22), new Vector2d(48, -35), new Vector2d(48, -40) };
-    int boardsCloseX = 54;
+    Vector2d[] tapes = { new Vector2d(20, -30), new Vector2d(29, -20), new Vector2d(43, -30) };
+    //Order, Left, Center, Right
+    Vector2d[] boards = { new Vector2d(48, -26), new Vector2d(48, -35), new Vector2d(48, -46)};
+    //Order Left, Center, Right
+    int boardsCloseX = 60;
     int boardsFarX = 38;
-    double outtakeTime = 1;
-    Vector2d park = new Vector2d(62, -56);
+    double outtakeTime = .5;
+    Vector2d park = new Vector2d(70, -56);
 
     MecanumDrive drive;
 
@@ -102,36 +104,42 @@ public class RedMC extends OpMode {
         telemetry.update();
 
         toBoards = drive.actionBuilder(drive.pose)
-                .strafeToConstantHeading(boards[loc.ordinal()])
-                .turn(Math.toRadians(95))
+                .strafeToConstantHeading(boards[1])
+                //CHange back to loc.ordinal()
+                .turn(Math.toRadians(100))
                 .build();
         placeSequenceUp = new SequentialAction(
-                lift.LevelAction(1),
+                lift.LevelAction(0),
                 bucket.ArmUpAction(),
                 new SleepAction(1),
                 bucket.RotateUpAction()
         );
-        toBoardClose = drive.actionBuilder(new Pose2d(boards[loc.ordinal()], Math.toRadians(180)))
-                .strafeTo(new Vector2d(boardsCloseX, boards[loc.ordinal()].y))
-                .strafeTo(new Vector2d(boardsFarX, boards[loc.ordinal()].y))
+        toBoardClose = drive.actionBuilder(new Pose2d(boards[1], Math.toRadians(180)))
+                .strafeTo(new Vector2d(boardsCloseX, boards[1].y))
+                .strafeTo(new Vector2d(boardsFarX, boards[1].y))
+                //Change back to loc.ordinal()
                 .build();
         placeSequenceDown = new SequentialAction(
                 bucket.RotateDownAction(),
                 bucket.ArmDownAction(),
+                lift.LevelAction(1),
+                new SleepAction(1),
                 lift.LevelAction(0)
         );
-        toTapes = drive.actionBuilder(new Pose2d(new Vector2d(boardsFarX, boards[loc.ordinal()].y), Math.toRadians(180)))
-                .strafeTo(tapes[loc.ordinal()])
+        toTapes = drive.actionBuilder(new Pose2d(new Vector2d(boardsFarX, boards[1].y), Math.toRadians(180)))
+                .strafeTo(tapes[1])
                 .build();
+        //Change to loc.ordinal()
         outtakeSequence = new SequentialAction(
                 intake.OutAction(),
                 new SleepAction(outtakeTime),
                 intake.StopAction()
         );
-        toPark = drive.actionBuilder(new Pose2d(tapes[loc.ordinal()], Math.toRadians(180)))
+        toPark = drive.actionBuilder(new Pose2d(tapes[1], Math.toRadians(180)))
                 .strafeTo(new Vector2d(38, -56))
                 .turn(Math.toRadians(10))
                 .strafeTo(park)
+                //Change to loc.ordinal()
                 .build();
 
         Actions.runBlocking(

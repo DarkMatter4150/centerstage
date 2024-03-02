@@ -22,14 +22,14 @@ public class VisionPipeline extends OpenCvPipeline {
     public Scalar lowBlue = new Scalar(85, 190, 0);
     public Scalar highBlue = new Scalar(255, 255, 160);
 
-    public Scalar lowRed = new Scalar(0, 60, 60);
-    public Scalar highRed = new Scalar(40, 255, 255);
+    public Scalar lowRed = new Scalar(143, 43, 12); //135 previous 2nd term
+    public Scalar highRed = new Scalar(150, 255, 255);
 
     private volatile vPos pos = vPos.LEFT;
 
     private volatile double objectArea = 0;
 
-    public double objectIdentificationArea = 1200;
+    public double objectIdentificationArea = 800;
 
     Mat blur = new Mat();
     Mat hsv = new Mat();
@@ -136,10 +136,10 @@ public class VisionPipeline extends OpenCvPipeline {
 
         if(isBlue) {
             if (biggestArea > objectIdentificationArea) {
-                if (maxAreaX < WIDTH / 2.5) {
+                if (maxAreaX < WIDTH / 2) {
                     pos = vPos.CENTER;
                 }
-                if (maxAreaX > WIDTH / 2.5) {
+                if (maxAreaX > WIDTH / 2) {
                     pos = vPos.RIGHT;
                 }
             } else {
@@ -149,10 +149,10 @@ public class VisionPipeline extends OpenCvPipeline {
 
         if(!isBlue) {
             if (biggestArea > objectIdentificationArea) {
-                if (maxAreaX < WIDTH / 2.5) {
+                if (maxAreaX < WIDTH / 2) {
                     pos = vPos.CENTER;
                 }
-                if (maxAreaX > WIDTH / 2.5) {
+                if (maxAreaX > WIDTH / 2) {
                     pos = vPos.RIGHT;
                 }
             } else {

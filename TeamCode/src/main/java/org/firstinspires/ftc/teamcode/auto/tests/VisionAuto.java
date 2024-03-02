@@ -31,7 +31,7 @@ public class VisionAuto extends OpMode {
 
     double area = 0;
 
-    String color = "BLUE";
+    String  color = "RED";
 
     @Override
     public void init() {
