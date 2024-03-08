@@ -24,7 +24,7 @@ public class AutoLift {
     public static double Ki = 0.0;
     public static double Kd = 0.0;
 
-    final int[] POSITIONS = { 0, -90, -100, -645 };
+    final int[] POSITIONS = { 0, -82, -100, -645 };
 
     int targetPos = 0;
 
